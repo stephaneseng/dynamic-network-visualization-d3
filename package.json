@@ -1,0 +1,12 @@
+{
+  "name": "dynamic-network-visualization-d3",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/StephaneSeng/dynamic-network-visualization-d3.git"
+  },
+  "licence": "MIT",
+  "dependencies": {
+    "d3": "^5.15.0"
+  }
+}
