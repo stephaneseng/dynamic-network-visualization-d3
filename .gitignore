@@ -1,1 +1,3 @@
 node_modules/
+var/data/*.db
+var/output/png/*.png
