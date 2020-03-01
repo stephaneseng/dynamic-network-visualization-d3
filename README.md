@@ -2,9 +2,11 @@
 
 Generate dynamic networks visualizations using [D3.js](https://d3js.org).
 
+![doc/2010-11-01-2011-04-01.gif](doc/2010-11-01-2011-04-01.gif)
+
 ## Getting started
 
-The generation is done in 2 phases, in a somewhat unconventional way:
+The generation is done in 2 phases:
 
 1. First, every frame of the visualization is generated one by one
 2. Then, these frames are merged together to form a video
@@ -18,7 +20,26 @@ The generation is done in 2 phases, in a somewhat unconventional way:
 
 ### 1. Data preparation
 
-An example dataset provided in [var/data/nodes.csv](var/data/nodes.csv) and [var/data/links.csv](var/data/links.csv) has been generated from the [Bitcoin Alpha trust weighted signed network](http://snap.stanford.edu/data/soc-sign-bitcoin-alpha.html) distributed by the [Stanford Network Analysis Project](http://snap.stanford.edu/index.html), using the following script:
+The [var/data/nodes.csv](var/data/nodes.csv) and [var/data/links.csv](var/data/links.csv) CSV files containing the dynamic network data first have to be imported into a SQLite database which will be accessed by the application at runtime:
+
+```
+$ sqlite3 var/data/sqlite.db <<EOF
+
+CREATE TABLE nodes (date DATE, id INTEGER);
+CREATE TABLE links (date DATE, source INTEGER, target INTEGER);
+
+.mode csv
+.separator ","
+.import var/data/nodes.csv nodes
+.import var/data/links.csv links
+
+CREATE INDEX index_nodes_date ON nodes (date);
+CREATE INDEX index_links_date ON links (date);
+
+EOF
+```
+
+Note: The example dataset provided in [doc/nodes.csv](doc/nodes.csv) and [doc/links.csv](doc/links.csv) has been generated from the [Bitcoin Alpha trust weighted signed network](http://snap.stanford.edu/data/soc-sign-bitcoin-alpha.html) distributed by the [Stanford Network Analysis Project](http://snap.stanford.edu/index.html), using the following script:
 
 ```
 $ sqlite3 <<EOF
@@ -53,25 +74,6 @@ SELECT date, id FROM nodes;
 
 .once var/data/links.csv
 SELECT date, source, target FROM links;
-
-EOF
-```
-
-Once these CSV files are ready, these still have to be imported into a SQLite database which will be accessed by the application at runtime:
-
-```
-$ sqlite3 var/data/sqlite.db <<EOF
-
-CREATE TABLE nodes (date DATE, id INTEGER);
-CREATE TABLE links (date DATE, source INTEGER, target INTEGER);
-
-.mode csv
-.separator ","
-.import var/data/nodes.csv nodes
-.import var/data/links.csv links
-
-CREATE INDEX index_nodes_date ON nodes (date);
-CREATE INDEX index_links_date ON links (date);
 
 EOF
 ```
