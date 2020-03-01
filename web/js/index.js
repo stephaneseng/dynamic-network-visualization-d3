@@ -1,5 +1,5 @@
-const START_DATE = new Date(Date.UTC(2019, 11, 1, 0, 0));
-const END_DATE = new Date(Date.UTC(2021, 0, 1, 0, 0));
+const START_DATE = new Date(Date.UTC(2010, 9, 1, 0, 0));
+const END_DATE = new Date(Date.UTC(2011, 10, 1, 0, 0));
 
 const canvas = d3.select('canvas');
 const width = +canvas.attr('width');
