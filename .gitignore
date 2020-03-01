@@ -1,3 +1,4 @@
 node_modules/
 var/data/*.db
-var/output/png/*.png
+var/output/frames/
+var/output/videos/

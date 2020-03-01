@@ -7,17 +7,18 @@ Generate dynamic networks visualizations using [D3.js](https://d3js.org).
 The generation is done in 2 phases, in a somewhat unconventional way:
 
 1. First, every frame of the visualization is generated one by one
-2. Then, these frames are merged together into a video
+2. Then, these frames are merged together to form a video
 
 ### 0. Requirements
 
+* [FFmpeg](https://www.ffmpeg.org) (tested with 3.4.6-0ubuntu0.18.04.1)
 * [Node.js](https://nodejs.org) and [npm](https://www.npmjs.com) (tested with v10.16.2 and v6.9.0 respectively)
 * [PHP](https://www.php.net) (tested with v7.2.24-0ubuntu0.18.04.3)
 * [SQLite](https://www.sqlite.org/index.html) (tested with v3.22.0)
 
 ### 1. Data preparation
 
-An example dataset provided in [nodes.csv](var/data/nodes.csv) and [links.csv](var/data/links.csv) has been generated from the [Bitcoin Alpha trust weighted signed network](http://snap.stanford.edu/data/soc-sign-bitcoin-alpha.html) distributed by the [Stanford Network Analysis Project](http://snap.stanford.edu/index.html), using the following script:
+An example dataset provided in [var/data/nodes.csv](var/data/nodes.csv) and [var/data/links.csv](var/data/links.csv) has been generated from the [Bitcoin Alpha trust weighted signed network](http://snap.stanford.edu/data/soc-sign-bitcoin-alpha.html) distributed by the [Stanford Network Analysis Project](http://snap.stanford.edu/index.html), using the following script:
 
 ```
 $ sqlite3 <<EOF
@@ -56,7 +57,7 @@ SELECT date, source, target FROM links;
 EOF
 ```
 
-Once these CSV files are ready, these still have to be imported into a SQLite database that will be accessed by the application at runtime:
+Once these CSV files are ready, these still have to be imported into a SQLite database which will be accessed by the application at runtime:
 
 ```
 $ sqlite3 var/data/sqlite.db <<EOF
@@ -93,7 +94,16 @@ $ php -S 127.0.0.1:8080 -t web/
 
 Then navigate to http://127.0.0.1:8080 to start the frames generation.
 
-Using the example dataset and the example configuration parameters, this will generate the frames for the events happening between 2010-11-01 and 2011-11-01.
+Using the example dataset and the example configuration parameters, this will generate the frames for the events happening between 2010-11-01 and 2011-04-01, month per month, with 60 frames per month.
+
+### 3. Video generation
+
+To generate a GIF file:
+
+```
+$ ffmpeg -pattern_type glob -i 'var/output/frames/*.png' -vf palettegen var/output/videos/palette.png
+$ ffmpeg -framerate 60 -pattern_type glob -i 'var/output/frames/*.png' -i var/output/videos/palette.png -filter_complex paletteuse var/output/videos/2010-11-01-2011-04-01.gif
+```
 
 ## References
 

@@ -1,6 +1,6 @@
 <?php
 
-define('OUTPUT_DIRECTORY', __DIR__ . '/../../var/output/png');
+define('OUTPUT_DIRECTORY', __DIR__ . '/../../var/output/frames');
 
 $date = $_GET['date'];
 $tick = str_pad($_GET['tick'], 3, '0', STR_PAD_LEFT);
